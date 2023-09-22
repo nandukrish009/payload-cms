@@ -1,7 +1,5 @@
 {
           "version": 2,
-             "start": "node dist/server.js",
-
             "builds": [
               {
                 "src": "dist/server.js",
