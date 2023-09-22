@@ -39,12 +39,25 @@ const start = async (): Promise<void> => {
   const nextApp = next({
     dev: process.env.NODE_ENV !== 'production',
   })
+  const nextAppProd = next({
+    dev: process.env.NODE_ENV === 'production',
+  })
 
   const nextHandler = nextApp.getRequestHandler()
+  const nextHandlerProd = nextAppProd.getRequestHandler()
 
   app.use((req, res) => nextHandler(req, res))
+  app.use((req, res) => nextHandlerProd(req, res))
 
   nextApp.prepare().then(() => {
+    payload.logger.info('Next.js started')
+
+    app.listen(PORT, async () => {
+      payload.logger.info(`Next.js App URL: ${process.env.PAYLOAD_PUBLIC_SERVER_URL}`)
+    })
+  })
+
+  nextAppProd.prepare().then(() => {
     payload.logger.info('Next.js started')
 
     app.listen(PORT, async () => {
